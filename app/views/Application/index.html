@@ -1,0 +1,10 @@
+#{extends 'main.html' /}
+#{set title:'Received HTTP request bodies' /}
+
+<dl>
+#{list received, as:'m'}
+  <dt>${m.dateTime.toString('yyyy-MM-dd HH:mm:ss')}</dt>
+  <dd>${m.message}</dd>
+#{/list}
+
+</dl>
