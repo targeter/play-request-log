@@ -4,15 +4,16 @@
   <div class="page-header">
     <h1>${title}</h1>
   </div>
-<div class="container">
+<div id="requests" class="container">
   #{list received.groupBy {it.dateTime.toString('yyyy-MM-dd')} }
-  <h3>${_.key}</h3>
-  <dl class="dl-horizontal">
-  #{list _.value, as:'m'}
-    <dt>${m.dateTime.toString('HH:mm:ss')}</dt>
-    <dd><pre>${m.message}</pre></dd>
+  <section data-date="${_.key}">
+    <h3>${_.key}</h3>
+    <dl class="dl-horizontal">
+      #{list _.value, as:'m'}
+        <dt>${m.dateTime.toString('HH:mm:ss')}</dt>
+        <dd><code >${m.message}</code></dd>
+      #{/list}
+    </dl>
+  </section>
   #{/list}
-  #{/list}
-
-  </dl>
 </div>

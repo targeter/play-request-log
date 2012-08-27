@@ -1,0 +1,57 @@
+#{include '/Application/index.html' /}
+#{set title:'STREAMING HTTP request bodies' /}
+
+<script type="text/javascript">
+  $(function () {
+    $('#req').click(function () {
+      $.desknoty({
+        icon:"",
+        title:"Notifications",
+        body:"Notifications enabled"
+      });
+    });
+
+  });
+
+</script>
+<script type="text/javascript">
+  $(function () {
+    // Create a socket
+    var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket;
+    var socket = new WS('@@{WebSocket.EventLogSocket.list()}');
+
+    // Message received on the socket
+    socket.onmessage = function (event) {
+      var eventData = JSON.parse(event.data);
+      var date = new Date(eventData.dateTime).toString('yyyy-MM-dd');
+      var time = new Date(eventData.dateTime).toString('HH:mm:ss');
+      var $sect = $("section").first();
+
+      if($sect.length == 0 || $sect.data('date') != date) {
+        $sect = $("<section/>").data('date', date);
+        $sect.append($("<h3/>").text(date));
+        $sect.append($("<dl/>").addClass('dl-horizontal'));
+        $('#requests').prepend($sect);
+      }
+
+      $dt = $("<dt/>").text(time).hide();
+      $dd = $("<dd/>").append($("<code/>").text(eventData.message)).hide();
+
+
+      $('dl', $sect).prepend($dd);
+      $('dl', $sect).prepend($dt);
+
+      $dt.fadeIn();
+      $dd.fadeIn();
+
+      $.desknoty({
+        icon:"",
+        title:"Incoming message",
+        body:"Message received"
+      });
+    };
+  });
+</script>
+
+
+<a href="#" id="req">Enable notifications</a>
