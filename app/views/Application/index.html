@@ -1,10 +1,18 @@
 #{extends 'main.html' /}
 #{set title:'Received HTTP request bodies' /}
 
-<dl>
-#{list received, as:'m'}
-  <dt>${m.dateTime.toString('yyyy-MM-dd HH:mm:ss')}</dt>
-  <dd>${m.message}</dd>
-#{/list}
+  <div class="page-header">
+    <h1>${title}</h1>
+  </div>
+<div class="container">
+  #{list received.groupBy {it.dateTime.toString('yyyy-MM-dd')} }
+  <h3>${_.key}</h3>
+  <dl class="dl-horizontal">
+  #{list _.value, as:'m'}
+    <dt>${m.dateTime.toString('HH:mm:ss')}</dt>
+    <dd><pre>${m.message}</pre></dd>
+  #{/list}
+  #{/list}
 
-</dl>
+  </dl>
+</div>

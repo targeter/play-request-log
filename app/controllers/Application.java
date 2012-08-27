@@ -3,9 +3,13 @@ package controllers;
 import com.google.common.base.Strings;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+import com.google.gson.JsonSerializer;
+import models.EventLog;
 import models.MessageEntry;
 import org.apache.commons.io.IOUtils;
 import play.*;
+import play.libs.F;
 import play.mvc.*;
 
 import java.io.IOException;
@@ -20,7 +24,9 @@ public class Application extends Controller {
             final String message = IOUtils.toString(request.body);
             Logger.info(message);
             if(!Strings.isNullOrEmpty(message)) {
-                received.add(new MessageEntry(message));
+                final MessageEntry messageEntry = new MessageEntry(message);
+                received.add(messageEntry);
+                EventLog.get().put(messageEntry);
             }
 
         } catch (IOException e) {
@@ -30,5 +36,7 @@ public class Application extends Controller {
         Set<MessageEntry> received = Application.received;
         render(received);
     }
+
+
 
 }
